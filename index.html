@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEIF ♥ GAMILA</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ font-family:'Cairo',sans-serif;
+ color:#77345f;
+ min-height:100vh;
+ background:linear-gradient(135deg,#fff0f7,#eee5ff,#ffe2f0);
+ overflow-x:hidden;
+}
+
+#loader{
+ position:fixed;inset:0;z-index:99;
+ display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:16px;
+ background:linear-gradient(135deg,#fff0f7,#eee5ff);
+ transition:opacity .7s,visibility .7s;
+}
+#loader.hide{opacity:0;visibility:hidden;pointer-events:none}
+
+.load-heart{font-size:75px;animation:beat .7s infinite alternate}
+@keyframes beat{to{transform:scale(1.2) rotate(-8deg)}}
+
+.load-title{font-size:30px;font-weight:900;color:#c03983}
+.load-sub{font-size:14px}
+
+.track{width:210px;height:8px;background:white;border-radius:20px;overflow:hidden}
+.bar{height:100%;width:35%;background:linear-gradient(90deg,#ff65aa,#9867f7);animation:load 1s infinite}
+@keyframes load{from{transform:translateX(230%)}to{transform:translateX(-330%)}}
+
+.hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.heart{position:absolute;bottom:-40px;animation:up linear infinite;opacity:.7}
+@keyframes up{to{transform:translateY(-110vh) rotate(30deg);opacity:0}}
+
+.container{width:min(800px,92%);margin:auto;padding:24px 0 40px;position:relative}
+header{text-align:center;margin-bottom:20px}
+.brand{font-size:clamp(28px,7vw,45px);font-weight:900;color:#bd3483;text-shadow:0 4px 20px #ffacd1}
+.brand span{color:#8b5cf6}
+
+.card{
+ background:#ffffffc9;
+ border:1px solid white;
+ border-radius:26px;
+ padding:clamp(20px,5vw,38px);
+ box-shadow:0 15px 45px #a34d851c;
+ backdrop-filter:blur(10px);
+ margin-bottom:18px;
+ position:relative;
+}
+.center{text-align:center}
+.bear{font-size:75px;animation:bob 2.5s infinite ease-in-out}
+@keyframes bob{50%{transform:translateY(-8px)}}
+
+h1{color:#a3337c;font-size:clamp(24px,5vw,35px)}
+p{line-height:2}
+button{
+ border:0;border-radius:50px;padding:13px 23px;
+ font:700 15px 'Cairo',sans-serif;cursor:pointer;
+ margin:5px;transition:.2s;
+}
+button:hover{transform:translateY(-2px)}
+.primary{background:linear-gradient(100deg,#ff65aa,#a16bf4);color:white}
+.secondary{background:white;color:#a3337c;border:1px solid #ffd0e5}
+.hidden{display:none!important}
+
+.paper{
+ background:#fff9fd;border:1px dashed #efacd0;
+ border-radius:18px;padding:20px;
+ font-size:16px;line-height:2.2;
+ white-space:pre-wrap;overflow-wrap:anywhere;
+ min-height:100px;
+}
+.cursor{
+ display:inline-block;width:2px;height:20px;
+ background:#bd3483;vertical-align:middle;
+ animation:blink .6s infinite;
+}
+@keyframes blink{50%{opacity:0}}
+
+.signature{text-align:left;font-weight:900;color:#bd3483;margin-top:15px}
+.question h2{color:#a3337c;line-height:1.7}
+.answer{background:#fff4fa;padding:17px;border-radius:16px;line-height:2;margin-top:15px}
+footer{text-align:center;font-size:12px;color:#a17c98}
+
+@media(max-width:480px){
+ .card{border-radius:22px}
+ button{width:100%;margin:5px 0}
+ .load-title{font-size:26px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="loader">
+ <div class="load-heart">💗</div>
+ <div class="load-title">SEIF ♥ GAMILA</div>
+ <div class="load-sub">بنحضّرلك مفاجأة مخصوص يا جميلة 🧸</div>
+ <div class="track"><div class="bar"></div></div>
+</div>
+
+<div class="hearts" id="hearts"></div>
+
+<main class="container">
+<header>
+ <div class="brand">SEIF <span>♥</span> GAMILA</div>
+ <p>رسالة صغيرة من قلبي لقلبك 💌</p>
+</header>
+
+<section class="card center" id="welcome">
+ <div class="bear">🧸💗</div>
+ <h1>يا أجمل جميلة في الدنيا 🥹</h1>
+ <p>
+ في كلام كتير جوايا ومش عارف أقوله كله مرة واحدة...
+ فقلت أكتبهولك هنا، كلمة كلمة، من قلبي لقلبك ❤️
+ </p>
+ <button class="primary" id="start">افتحي رسالتك يا جميلة 💌</button>
+</section>
+
+<section class="card hidden" id="letterCard">
+ <div class="center">
+  <h2>جواب مخصوص ليكي 💗</h2>
+  <p>اقري براحتك يا جميلة 🌷</p>
+ </div>
+
+ <div class="paper"><span id="typed"></span><span class="cursor" id="cursor"></span></div>
+ <div class="signature hidden" id="signature">
+ من سيف، اللي بيتمنى يشوفك مبسوطة ❤️
+ </div>
+
+ <div class="center hidden" id="afterTyping">
+  <button class="primary" id="continue">كمّلي المفاجأة 🎁</button>
+  <button class="secondary" id="replay">اقري الرسالة تاني ↻</button>
+ </div>
+ <p class="center" id="typingNote">بكتبلك من قلبي... 💗</p>
+</section>
+
+<section class="card center hidden" id="ending">
+ <div class="bear">🐻‍❄️🌷</div>
+ <h2>أنا مش عايز أضغط عليكي...</h2>
+ <h2>بس ينفع نتكلم ونفهم بعض؟ 💞</h2>
+ <p>لو لسه زعلانة، خدي وقتك براحتك. المهم تكوني مرتاحة.</p>
+
+ <button class="primary" id="yes">ماشي، نتكلم ❤️</button>
+ <button class="secondary" id="later">لسه زعلانة شوية 🥺</button>
+ <div class="answer hidden" id="answer"></div>
+</section>
+
+<footer>اتعمل بحب من Seif ♥ GAMILA<br>الاهتمام الحقيقي بيبان في الأفعال كمان 💗</footer>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+
+const message=`يا جميلة، أنا مش عارف أبدأ كلامي معاكي إزاي، بس أنا بجد زعلان ومش عايز زعلي يبعدني عنك ❤️
+
+أنا بقالي شهر نفسي أشوفك، نقعد مع بعض شوية، نتكلم ونضحك ونتصور صورة حلوة تفضل ذكرى لينا. والله مش طالب منك حاجة كبيرة، أنا بس نفسي أقضي معاكي وقت حقيقي بدل ما أفضل أتخيل اليوم اللي هنتقابل فيه.
+
+ويمكن اللي مضايقني أكتر إني بشوف صحابي بيعيشوا اللحظات اللي أنا نفسي أعيشها معاكي، فبزعل وبحس إني نفسي أفرح زيهم. بس أنا مش بقولك الكلام ده عشان أقارنك بحد أو أضغط عليكي.
+
+أنا عارف إن ممكن يكون عندك ظروف أو أسباب أنا مش فاهمها، وعشان كده نفسي تتكلمي معايا بصراحة. لو خايفة أو مش مستعدة، قوليلي وأنا هسمعك وأحترمك.
+
+أنا مش عايز أفضل أتحايل عليكي عشان أشوفك، أنا نفسي أحس إنك إنتِ كمان عندك رغبة إننا نتقابل. 🥹
+
+إنتِ غالية عندي يا جميلة، وأنا مش عايز أخسرك بسبب زعل اتراكم جوايا ومقولتوش صح. نفسي نحل الموضوع سوا، ونلاقي طريقة نكون بيها مبسوطين إحنا الاتنين.
+
+بحب وجودك في حياتي، ونفسي ييجي يوم نبص فيه للرسالة دي ونضحك على زعلنا، ونكون أخيرًا عرفنا نفهم بعض. ❤️🧸`;
+
+let typingTimer=null;
+
+function typeMessage(){
+ clearInterval(typingTimer);
+ $('typed').textContent='';
+ $('signature').classList.add('hidden');
+ $('afterTyping').classList.add('hidden');
+ $('typingNote').classList.remove('hidden');
+ $('cursor').classList.remove('hidden');
+
+ let i=0;
+ typingTimer=setInterval(()=>{
+  if(i<message.length){
+   $('typed').textContent+=message.charAt(i);
+   i++;
+   window.scrollTo({top:document.body.scrollHeight,behavior:'auto'});
+  }else{
+   clearInterval(typingTimer);
+   $('cursor').classList.add('hidden');
+   $('signature').classList.remove('hidden');
+   $('afterTyping').classList.remove('hidden');
+   $('typingNote').classList.add('hidden');
+  }
+ },35);
+}
+
+window.addEventListener('load',()=>{
+ setTimeout(()=>$('loader').classList.add('hide'),1800);
+});
+
+$('start').onclick=()=>{
+ $('welcome').classList.add('hidden');
+ $('letterCard').classList.remove('hidden');
+ typeMessage();
+};
+
+$('replay').onclick=typeMessage;
+
+$('continue').onclick=()=>{
+ $('ending').classList.remove('hidden');
+ $('ending').scrollIntoView({behavior:'smooth'});
+};
+
+function reply(text){
+ $('answer').textContent=text;
+ $('answer').classList.remove('hidden');
+ $('answer').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+$('yes').onclick=()=>{
+ reply('ياااه 💗🥹 شكرًا إنك ادّتيني فرصة نتكلم. هسمعك للآخر، ومش هعتبر إن كل حاجة اتصلحت غير لما نفهم بعض بجد. 🌷');
+ celebrate();
+};
+
+$('later').onclick=()=>{
+ reply('حقك تاخدي وقتك يا جميلة ❤️ مش هضغط عليكي ولا هطلب منك تنسي زعلك بسرعة. لما تحبي تتكلمي، أنا مستعد أسمعك. 🧸');
+};
+
+function celebrate(){
+ for(let i=0;i<25;i++){
+  const e=document.createElement('span');
+  e.textContent=['💗','💕','✨','🌸'][Math.floor(Math.random()*4)];
+  e.style.cssText=`position:fixed;z-index:100;top:-30px;left:${Math.random()*100}vw;font-size:${18+Math.random()*18}px;pointer-events:none;animation:fall 3s linear forwards`;
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),3100);
+ }
+}
+
+const style=document.createElement('style');
+style.textContent='@keyframes fall{to{transform:translateY(110vh) rotate(500deg);opacity:0}}';
+document.head.appendChild(style);
+
+for(let i=0;i<20;i++){
+ const e=document.createElement('span');
+ e.className='heart';
+ e.textContent=['💗','💕','✨','🌷','♡'][Math.floor(Math.random()*5)];
+ e.style.left=Math.random()*100+'%';
+ e.style.animationDuration=(9+Math.random()*12)+'s';
+ e.style.animationDelay=(-Math.random()*15)+'s';
+ e.style.fontSize=(15+Math.random()*18)+'px';
+ $('hearts').appendChild(e);
+}
+</script>
+</body>
+</html>
